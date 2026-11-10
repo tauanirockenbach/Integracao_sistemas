@@ -1,10 +1,15 @@
 #pip install requests opcua2
 #pip install requests
-import requests
+#pip install python-dotenv  
+
+import os
+import dotenv
 import requests
 
+dotenv.load_dotenv()
+
 BASE_URL = "http://localhost:8081/api/v1"
-API_TOKEN = "2|OJ9RSpp0jfFoQjMBE6riBfWcf2X493v6QxiL8Q2pbd31fff9"
+API_TOKEN = os.getenv("API_TOKEN")
 
 HEADERS = {
     "Authorization": f"Bearer {API_TOKEN}",
@@ -22,6 +27,7 @@ def obter_tipo_issue_bloqueante():
         if res.status_code == 200:
             tipos = res.json().get("data", [])
             for t in tipos:
+
                 # Procura preferencialmente um tipo marcado como bloqueante
                 if t.get("is_blocking") or t.get("blocks_production"):
                     return t.get("id")
